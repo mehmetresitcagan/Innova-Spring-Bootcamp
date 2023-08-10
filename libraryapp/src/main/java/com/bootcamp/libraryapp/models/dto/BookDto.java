@@ -6,6 +6,7 @@ public class BookDto {
     private int categoryID;
     private int authorID;
 
+    // Murat
     public int getId() {
         return id;
     }
