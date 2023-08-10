@@ -3,56 +3,70 @@ package com.bootcamp.libraryapp.web;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bootcamp.libraryapp.models.entities.Book;
+import com.bootcamp.libraryapp.models.dto.BookDto;
+import com.bootcamp.libraryapp.models.dto.UpdateBookNameAndAuthorIdDto;
+import com.bootcamp.libraryapp.service.BookService;
 
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("api/books")
 public class BookController {
 
-    @GetMapping(value = "")
-    public String get() {
-        return "get";
+    private BookService bookService;
+
+    @Autowired
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @GetMapping(value = "")
-    public String findAll() {
-        return "findAll";
+    public ResponseEntity<ArrayList<BookDto>> getAllBooks() {
+        return ResponseEntity.ok(bookService.getAllBooks());
     }
 
-    @GetMapping(value = "/{bookID}")
-    public int findByID(@PathVariable int bookID) {
-        return bookID;
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<BookDto> getBookById(@PathVariable("id") int bookID) {
+        BookDto book = bookService.getBookById(bookID);
+        if (book != null) {
+            return ResponseEntity.ok(book);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @PostMapping(value = "add")
-    public boolean postMethodName(@RequestBody Book entity) {
-        System.out.println(entity.getId());
-        System.out.println(entity.getName());
-        return true;
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> deleteBookById(@PathVariable("id") int bookId) {
+        return ResponseEntity.ok(bookService.deleteBookById(bookId));
     }
 
-    @DeleteMapping(value = "/{bookId}")
-    public int deleteUser(@PathVariable int bookId) {
-        return bookId;
+    @PostMapping(value = "")
+    public ResponseEntity<Integer> addBook(@RequestBody BookDto bookDto) {
+        ResponseEntity<Integer> ok = ResponseEntity.ok(bookService.addBook(bookDto));
+        return ok;
+
     }
 
-    @PutMapping(value = "/{bookId}")
-    public String updateUser(@PathVariable int bookId) {
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<BookDto> updateBook(@PathVariable("id") int bookId, @RequestBody BookDto book) {
+        return ResponseEntity.ok(bookService.updateBook(bookId, book));
 
-        return "update";
     }
 
-    @PatchMapping(value = "/{bookId}")
-    public String updateSomeData(@PathVariable int bookId, @RequestBody Book entity) {
-        return "patch";
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<BookDto> updateBookNameAndAuthorId(@PathVariable("id") int bookId,
+            @RequestBody UpdateBookNameAndAuthorIdDto book) {
+        return ResponseEntity.ok(bookService.updateBookNameAndAuthorId(bookId, book));
     }
 
 }
