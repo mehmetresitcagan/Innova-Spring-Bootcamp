@@ -13,8 +13,4 @@ public class TestController {
         return true;
     }
 
-    @GetMapping(value = "/murat/")
-    public String gayMi() {
-        return "gayMurat";
-    }
 }
