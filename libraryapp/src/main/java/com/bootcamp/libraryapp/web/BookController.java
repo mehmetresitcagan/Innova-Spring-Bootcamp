@@ -27,7 +27,7 @@ public class BookController {
         return "findAll";
     }
 
-    @GetMapping(value = "find/{bookID}")
+    @GetMapping(value = "/{bookID}")
     public int findByID(@PathVariable int bookID) {
         return bookID;
     }
@@ -39,18 +39,18 @@ public class BookController {
         return true;
     }
 
-    @DeleteMapping(value = "delete/{bookId}")
+    @DeleteMapping(value = "/{bookId}")
     public int deleteUser(@PathVariable int bookId) {
         return bookId;
     }
 
-    @PutMapping(value = "{bookId}")
+    @PutMapping(value = "/{bookId}")
     public String updateUser(@PathVariable int bookId) {
 
         return "update";
     }
 
-    @PatchMapping(value = "{bookId}")
+    @PatchMapping(value = "/{bookId}")
     public String updateSomeData(@PathVariable int bookId, @RequestBody Book entity) {
         return "patch";
     }
