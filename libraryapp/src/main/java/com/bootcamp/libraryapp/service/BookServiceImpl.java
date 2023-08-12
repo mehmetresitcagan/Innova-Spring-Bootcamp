@@ -47,4 +47,25 @@ public class BookServiceImpl implements BookService {
         return bookDto;
     }
 
+    @Override
+    public ArrayList<BookDto> search(int categoryID, String bookName) {
+        BookDto book = new BookDto();
+        ArrayList<BookDto> bookList = new ArrayList<BookDto>();
+
+        if (categoryID > 10) {
+            book.setCategoryID(categoryID);
+
+            if (bookName != null) {
+                book.setName(bookName);
+            } else {
+                book.setName("None");
+            }
+
+            bookList.add(book);
+
+        }
+
+        return bookList;
+    }
+
 }

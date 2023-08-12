@@ -18,4 +18,6 @@ public interface BookService {
 
     BookDto updateBookNameAndAuthorId(int bookId, UpdateBookNameAndAuthorIdDto book);
 
+    ArrayList<BookDto> search(int categoryId, String bookName);
+
 }

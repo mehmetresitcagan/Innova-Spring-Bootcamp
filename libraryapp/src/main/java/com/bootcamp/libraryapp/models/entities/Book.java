@@ -2,17 +2,17 @@ package com.bootcamp.libraryapp.models.entities;
 
 public class Book {
 
+    private int id;
+    private String name;
+    private int categoryID;
+    private int authorID;
+
     public Book(int id, String name, int categoryID, int authorID) {
         this.id = id;
         this.name = name;
         this.categoryID = categoryID;
         this.authorID = authorID;
     }
-
-    private int id;
-    private String name;
-    private int categoryID;
-    private int authorID;
 
     public int getId() {
         return id;

@@ -1,6 +1,7 @@
 package com.bootcamp.libraryapp.web;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bootcamp.libraryapp.models.dto.BookDto;
@@ -10,6 +11,7 @@ import com.bootcamp.libraryapp.service.BookService;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,6 +69,23 @@ public class BookController {
     public ResponseEntity<BookDto> updateBookNameAndAuthorId(@PathVariable("id") int bookId,
             @RequestBody UpdateBookNameAndAuthorIdDto book) {
         return ResponseEntity.ok(bookService.updateBookNameAndAuthorId(bookId, book));
+    }
+
+    @GetMapping(value = "/search")
+    public Object search(@RequestParam("catId") int categoryID,
+            @RequestParam(name = "bookname", required = false) String bookname) {
+
+        ArrayList<BookDto> searchList = bookService.search(categoryID, bookname);
+
+        if (searchList.size() > 0) {
+            // return ResponseEntity.ok(searchList);
+            return searchList;
+        } else {
+            // return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Aranılan kayıt
+            // bulunamadı.");
+            return "Kayıt bulunamadı.";
+        }
+
     }
 
 }
