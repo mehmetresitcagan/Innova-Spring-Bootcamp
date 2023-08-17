@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.example.dbapp.model.entity.Category;
@@ -19,29 +22,28 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<Category> getAllCategories() {
 
-        List<Category> findAll = categoryRepository.findAll();
+        List<Category> categoryList = categoryRepository.findAll();
+        return categoryList;
+    }
 
-        return findAll;
+    @Override
+    public Category getCategoryById(int category_Id) {
+        Optional<Category> opetionalCategory = categoryRepository.findById(category_Id);
+        if (opetionalCategory.isPresent()) {
+            Category category = opetionalCategory.get();
+            return category;
+        }
+        return null;
     }
 
     @Override
     public boolean deleteCategoryById(int categoryId) {
+
         if (existCategoryById(categoryId)) {
             categoryRepository.deleteById(categoryId);
             return true;
         }
         return false;
-    }
-
-    @Override
-    public Category getCategoryById(int categoryId) {
-        Optional<Category> optional = categoryRepository.findById(categoryId);
-        if (optional.isPresent()) {
-            Category category = optional.get();
-            return category;
-        }
-
-        return null;
     }
 
     @Override
@@ -52,24 +54,35 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category updateCategory(Category categoryParam) {
-        boolean existsCategoryById = existCategoryById(categoryParam.getId())
-        if(existsCategoryById){
+        boolean existCategoryById = existCategoryById(categoryParam.getId());
+        if (existCategoryById) {
             Category categoryEntity = getCategoryById(categoryParam.getId());
-
+            categoryEntity.setName(categoryParam.getName());
+            categoryRepository.save(categoryEntity);
+            return categoryEntity;
         }
-    
-    
+
+        return null;
     }
 
     @Override
     public List<Category> searchCategoryByName(String categoryName) {
-
+        List<Category> categoryList = categoryRepository.findByName(categoryName);
+        return categoryList;
     }
 
     @Override
     public boolean existCategoryById(int categoryId) {
         boolean existsById = categoryRepository.existsById(categoryId);
         return existsById;
+    }
+
+    @Override
+    public List<Category> searchCategoryByName(String categoryName, int pageNo, int pageSize, Direction sortDirection,
+            String sortProperty) {
+        PageRequest pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortDirection, sortProperty));
+        List<Category> categoryList = categoryRepository.findByName(categoryName, pageable);
+        return categoryList;
     }
 
 }
